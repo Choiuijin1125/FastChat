@@ -72,7 +72,7 @@ class BaseModelAdapter:
             )
         try:
             model = AutoModelForCausalLM.from_pretrained(
-                model_path, low_cpu_mem_usage=True, **from_pretrained_kwargs
+                model_path, low_cpu_mem_usage=True, load_in_8bit=True, **from_pretrained_kwargs
             )
         except NameError:
             model = AutoModel.from_pretrained(
@@ -220,7 +220,7 @@ def load_model(
         kwargs["quantization_config"] = BitsAndBytesConfig(
             load_in_8bit_fp32_cpu_offload=cpu_offloading
         )
-        kwargs["load_in_8bit"] = load_8bit
+        # kwargs["load_in_8bit"] = load_8bit
     elif load_8bit:
         if num_gpus != 1:
             warnings.warn(

@@ -579,6 +579,8 @@ class AiroborosAdapter(BaseModelAdapter):
             low_cpu_mem_usage=True,
             trust_remote_code=True,
             max_seq_len=8192,
+            torch_dtype=torch.float16,
+            load_in_8bit=True,
             **from_pretrained_kwargs,
         )
         tokenizer = AutoTokenizer.from_pretrained(

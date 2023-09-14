@@ -92,16 +92,13 @@ def apply_compressed_weight(module, compressed_state_dict, target_device, prefix
             full_name = (
                 f"{prefix}.{attr_str}.weight" if prefix else f"{attr_str}.weight"
             )
-            try:
-                setattr(
-                    module,
-                    attr_str,
-                    CLinear(
-                        compressed_state_dict[full_name], target_attr.bias, target_device
-                    ),
-                )
-            except:
-                print(full_name)
+            setattr(
+                module,
+                attr_str,
+                CLinear(
+                    compressed_state_dict[full_name], target_attr.bias, target_device
+                ),
+            )
     for name, child in module.named_children():
         child_prefix = f"{prefix}.{name}" if prefix else name
         apply_compressed_weight(
@@ -199,12 +196,9 @@ def load_compress_model(model_path, device, torch_dtype, use_fast, revision="mai
 
     for name in model.state_dict():
         if name not in linear_weights:
-            try :
-                set_module_tensor_to_device(
-                    model, name, device, value=compressed_state_dict[name]
-                )
-            except:
-                print(name)
+            set_module_tensor_to_device(
+                model, name, device, value=compressed_state_dict[name]
+            )
     apply_compressed_weight(model, compressed_state_dict, device)
 
     if torch_dtype == torch.float16:

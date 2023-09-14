@@ -92,13 +92,16 @@ def apply_compressed_weight(module, compressed_state_dict, target_device, prefix
             full_name = (
                 f"{prefix}.{attr_str}.weight" if prefix else f"{attr_str}.weight"
             )
-            setattr(
-                module,
-                attr_str,
-                CLinear(
-                    compressed_state_dict[full_name], target_attr.bias, target_device
-                ),
-            )
+            try:
+                setattr(
+                    module,
+                    attr_str,
+                    CLinear(
+                        compressed_state_dict[full_name], target_attr.bias, target_device
+                    ),
+                )
+            except:
+                pass
     for name, child in module.named_children():
         child_prefix = f"{prefix}.{name}" if prefix else name
         apply_compressed_weight(
